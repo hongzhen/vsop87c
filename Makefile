@@ -1,16 +1,26 @@
 SRC=$(wildcard *.c)
 OBJS=$(patsubst %.c,%.o,$(SRC)) 
 
-CC=clang-3.6
+AR=ar
 
-all: test
+CC=clang-3.6
+DEBUG=-g -pg
+
+
+all: libvsop87c.a
+
+libvsop87c.a: $(OBJS)
+	$(AR) rc -o $@ $^
+
 
 %.o: %.c
-	$(CC) -c -std=c99 -Wall -Werror -o $@ $^
+	$(CC) $(DEBUG) -c -std=c99 -Wall -Werror -o $@ $^
 
 test: $(OBJS)
 	$(CC) -lm -lc -o $@ $^
 
 clean:
-	rm -rf *.o
+	rm -rf *.o *.a
 
+ctags:
+	ctags --lang=c *.c *.h
